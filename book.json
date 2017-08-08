@@ -1,0 +1,7 @@
+{
+    "title": "Introducción a Ruby on Rails",
+    "plugins": [
+        "-search",
+        "-lunr"
+    ]
+}
