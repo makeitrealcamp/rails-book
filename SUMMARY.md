@@ -15,4 +15,4 @@
 * [Validaciones](13-validaciones.md)
 * [Asociaciones](14-asociaciones.md)
 * [Envío de Correos](15-envio-de-correos.md)
-* [Scopes](16-scopes.md)
+* [Próximos Pasos](16-proximos-pasos.md)
