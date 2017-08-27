@@ -60,4 +60,4 @@ Para ver la lista de variables que puedes sobrescribir sigue [este enlace](https
 
 Eso es todo lo que necesitas para empezar a trabajar con Bootstrap en tus proyectos.
 
-El siguiente paso es aplicar Bootstrap al proyecto. Esto está por fuera del alcance de este libro pero puedes revisar este commit para ver y estudiar los cambios que se hicieron.
+El siguiente paso es aplicar Bootstrap al proyecto. Esto está por fuera del alcance de este libro pero puedes revisar [este commit](https://github.com/makeitrealcamp/books-app/commit/b36d61fb2ec926eb74dfc7a820dbe64026a358ac) para ver y estudiar los cambios que se hicieron.

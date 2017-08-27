@@ -2,7 +2,7 @@
 
 En este capítulo vamos a crear nuestra primera aplicación de [Ruby on Rails](http://rubyonrails.org/), la misma aplicación con la que trabajaremos durante todo el libro.
 
-La aplicación que vamos a construir se va a llamar **Books** y les va a permitir a los usuarios registrarse, publicar libros y dejar reseñas. El resultado final lo puedes ver en [este enlace](https://radiant-escarpment-43957.herokuapp.com/).
+La aplicación que vamos a construir se va a llamar **Books** y les va a permitir a los usuarios registrarse, publicar libros y dejar comentarios. El resultado final lo puedes ver en [este enlace](https://radiant-escarpment-43957.herokuapp.com/).
 
 ## Requisitos
 
@@ -76,9 +76,7 @@ El objetivo principal de **Ruby on Rails** es el de asociar **rutas** (p.e. `/bo
 
 Las asociación entre rutas y métodos se define en el archivo `config/routes.rb`.
 
-A las clases que contienen los métodos asociados a rutas se les conoce como **controladores**.
-
-Los **controladores** se encuentra en la carpeta `app/controllers`.
+A las clases que contienen los métodos asociados a rutas se les conoce como **controladores** y se encuentran en la carpeta `app/controllers`.
 
 Vamos a generar nuestro primer **controlador** ejecutando el siguiente comando:
 
