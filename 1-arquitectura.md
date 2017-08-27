@@ -22,7 +22,7 @@ Los componentes más importantes de **Ruby on Rails** y que veremos en más deta
 
 ## El enrutador
 
-El **enrutador** es el componente que decide qué **controlador** y **método** va a procesar una petición HTTP.
+El **enrutador** es el componente que decide qué **controlador** y qué **método** va a procesar una petición HTTP.
 
 El **enrutador** se configura en el archivo `config/routes.rb`.
 
@@ -142,6 +142,14 @@ A medida que avancemos vamos a ver otros comandos útiles.
 
 ## Listar libros
 
+Continuemos trabajando en nuestra aplicación. Si seguiste los pasos del capítulo anterior puedes continuar con esa aplicación. De lo contrario ejecuta los siguientes comandos para clonar el proyecto y continuar:
+
+```
+$ git clone https://github.com/makeitrealcamp/books-app.git
+$ cd books-app
+$ git checkout step-1
+```
+
 Vamos a crear un nuevo **controlador** llamado `books` que va a contener todas las acciones relacionadas con los libros: listar, crear, editar, eliminar, etc.
 
 Para crear el controlador utiliza el siguiente comando:
@@ -160,7 +168,7 @@ class BooksController < ApplicationController
 end
 ```
 
-Aun no vamos a obtener lo libros de la base de datos, pero por ahora podemos mostrar los 3 que tenemos en el arreglo.
+Aún no vamos a obtener lo libros de la base de datos, pero por ahora podemos mostrar los 3 que tenemos en el arreglo.
 
 Crea un archivo `app/views/books/index.html.erb` y transcribe lo siguiente:
 
@@ -189,4 +197,6 @@ Por último tenemos que crear la ruta. Abre `config/routes.rb` y agrega la sigui
   get '/books', to: 'books#index'
 ```
 
-Abre un navegador e ingresa a http://localhost:3000/books. Deberías ver los tres libros que acabamos de crear en una tabla como se muestra en la siguiente imagen.
+Abre un navegador e ingresa a http://localhost:3000/books. Deberías ver los tres libros que acabamos de crear en una tabla como se muestra en la siguiente imagen:
+
+![Books - Atom Editor](https://s3.amazonaws.com/makeitreal/images/books/books-list.jpg)

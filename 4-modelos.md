@@ -22,15 +22,15 @@ Vamos a continuar con la aplicación de libros que iniciamos en los dos primeros
 ```
 $ git clone https://github.com/makeitrealcamp/books-app.git
 $ cd books-app
-$ git checkout models
+$ git checkout step-2
 ```
 
-Aunque es posible crear la tabla y el modelo manualmente, es más fácil utilizar el generador `rails generate model` desde la línea de comandos.
+Aunque es posible crear la tabla y el modelo manualmente, es más fácil utilizar el generador de modelos de la aplicación de la línea de comandos que incluye Rails.
 
-Vamos a crear nuestro primer modelo `Book` con los campos `title`, `author`, `description`, `publication_date`, `price` y `num_pages`. Ejecuta el siguiente comando en la consola:
+Vamos a crear nuestro primer modelo `Book` con los campos `title`, `author`, `description`, `publication_date` y `price`. Ejecuta el siguiente comando en la consola:
 
 ```
-$ rails generate model Book title author description:text publication_date:date price:decimal num_pages:integer
+$ rails generate model Book title author description:text publication_date:date price:decimal
 ```
 
 Varias cosas que debes tener en cuenta:
@@ -43,7 +43,7 @@ Varias cosas que debes tener en cuenta:
 
 * Puedes definir el tipo del campo utilizando `:` seguido del tipo de datos (sin espacios!).
 
-* Los tipos más comunes son: `string`, `text`, `integer`, `decimal`, `date`, `time`, `datetime`,  `boolean` y `references`.
+* Los tipos más comunes son: `string`, `text`, `integer`, `decimal`, `date`, `time`, `datetime`, `boolean` y `references`.
 
 * Si el tipo es `string` puedes definir la longitud máxima con llaves al final: `string{10}`
 
@@ -84,14 +84,14 @@ La consola de Rails es un ambiente similar a IRB pero en el que podemos acceder 
 Para crear un nuevo registro en la base de datos debemos instanciar el modelo `Book` y utilizar el método `save`:
 
 ```
-> book1 = Book.new(title: "The Pragmatic Programmer", author: "Andrew Hunt y David Thomas", publication_date: "1999-10-20", price: 31.19)
+> book1 = Book.new(title: "The Pragmatic Programmer", author: "Andrew Hunt, David Thomas", publication_date: "1999-10-20", price: 31.19)
 > book1.save
 ```
 
 Existe una forma equivalente pero más corta:
 
 ```ruby
-book1 = Book.create(title: "The Pragmatic Programmer", author: "Andrew Hunt y David Thomas", publication_date: "1999-10-20", price: 31.19, num_pages: 289)
+book1 = Book.create(title: "The Pragmatic Programmer", author: "Andrew Hunt, David Thomas", publication_date: "1999-10-20", price: 31.19)
 ```
 
 ### Encontrando registros específicos

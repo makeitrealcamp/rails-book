@@ -5,6 +5,14 @@ Las asociaciones se utilizan para definir relaciones entre tablas de una base de
 * One to many (uno a muchos)
 * Many to many (muchos a muchos)
 
+Recuerda, como siempre, que puedes continuar con la aplicación que estás trabajando o clonar el proyecto y ubicarte en la rama de este capítulo ejecutando los siguiente comandos:
+
+```
+$ git clone https://github.com/makeitrealcamp/books-app.git
+$ cd books-app
+$ git checkout step-11
+``` 
+
 ## One to many (uno a muchos)
 
 En una relación uno a muchos **cada registro de una tabla está relacionado a un registro de otra tabla**.
@@ -83,11 +91,11 @@ category.books.create(title: "Tercer libro")
 
 ## Many to many (muchos a muchos)
 
-Una asociación muchos a muchos es un tipo de asociación en donde **un registro de una tabla puede estar relacionada a muchos registros de otra otra tabla**.
+En nuestra aplicación de libros definimos los autores de un libro en un campo llamado `authors`. Sin embargo, sería mucho mejor tener una tabla de **autores** independiente de la tabla de **libros**. Un **libro** puede tener muchos **autores** y un **autor** puede tener muchos **libros**. Es una relación muchos a muchos.
 
-Por ejemplo, un libro puede tener muchos autores y un autor puede tener muchos libros. **Es una relación muchos a muchos**.
+**Nota:** No vamos a implementar esta asociación en nuestra aplicación, sólo vamos a explicar cómo se haría.
 
-Para definir una relación muchos a muchos se debe **crear una tabla intermedia** que relacione las dos tablas.
+Una asociación muchos a muchos es un tipo de asociación en donde **un registro de una tabla puede estar relacionada a muchos registros de otra otra tabla**. Para definir una relación muchos a muchos se debe **crear una tabla intermedia** que relacione las dos tablas.
 
 Imagina que la tabla `authors` tiene los siguientes registros:
 
@@ -195,51 +203,142 @@ book.authors.delete(author)
 
 Acá estamos asumiendo que esos dos registros están asociados, aunque si no lo están no ocurre ningún error, simplemente no cambia nada en la base de datos.
 
-## Asociación polimórfica
+## Comentarios para los libros
 
-La asociación polimórfica es un tipo de asociación uno a muchos que se puede implementar en Ruby on Rails (en la base de datos no se puede implementar directamente) en donde una tabla puede estar asociada a muchas otras tablas.
-
-Imagina que en nuestra aplicación de libros se pueden dejar comentarios tanto en los libros como en los autores. En vez de crear una tabla para los comentarios de los libros y otra para los comentarios de las respuestas, podemos crear una tabla única `comments` que tenga los comentarios tanto de los libros como de los autores.
-
-La tabla de preguntas (`questions`) tendría la siguiente estructura:
-
-| id | comentable_type | commentable_id | text                    |
-|----|-----------------|----------------|-------------------------|
-| 1  | Author        | 1              | Comentario al Autor 1 |
-| 2  | Book          | 1              | Comentario a Book 1   |
-
-La tabla `comments` utiliza dos columnas para identificar la tabla y el id del registro al que va a estar relacionado cada registro.
-
-Para implementar esta asociación empecemos por crear el modelo `Comment`:
+Vamos a implementar la posibilidad de que los usuarios puedan dejar comentarios en los libros. Para eso necesitamos un modelo `Comment` que está asociado a un usuario y a un libro. Ejecuta el siguiente comando en la consola:
 
 ```
-$ rails g model Comment commentable:reference{polymorphic} text:text
+$ rails g model Comment user:references book:references body:text
 ```
 
-Fíjate que agregamos una referencia en `Comment` a `commentable`, que no es un modelo existente, es simplemente un nombre que le debemos dar a la relación.
+Ahora corre las migraciones ejecutando:
 
-Ahora agreguemos la relación en los modelos:
+```
+$ rails db:migrate
+```
+
+Abre `app/models/book.rb` y agrega la siguiente línea antes del último `end`:
+
+```
+has_many :comments
+```
+
+Haz lo mismo en `app/models/user.rb`.
+
+Crea ahora el controlador de los comentarios ejecutando el siguiente comando:
+
+```
+$ rails g controller Comments
+```
+
+Abre `app/controllers/comments_controllers.rb` y transcribe lo siguiente **dentro** de la clase:
 
 ```ruby
-class Author < ApplicationRecord
-  has_many :comments, as: :commentable
+before_action :authenticate_user!
+
+def create
+  book = Book.find(params[:comment][:book_id])
+  comment = book.comments.build(comment_params)
+  comment.user = current_user
+
+  if comment.save
+    redirect_to comment.book
+  end
 end
 
-class Book < ApplicationRecord
-  has_many :comments, as: :commentable
-end
-
-class Comment < ApplicationRecord
-  belongs_to :commentable, polymorphic: true
-end
+private
+  def comment_params
+    params.require(:comment).permit(:body)
+  end
 ```
 
-Si queremos agregar comentarios a un libro lo podemos hacer de la siguiente forma:
+Lo que está haciendo el código dentro de `create` es obteniendo el libro al cuál le estamos dejando el comentario, construyendo el libro y asignándole el usuario que lo creó (el usuario actual).
+
+Agreguemos ahora la ruta al archivo `config/routes.rb`:
 
 ```ruby
-book = Book.first
-book.comments.create(text: "Este es un comentario")
-
-# O de esta forma más larga
-Comment.create(commentable: book, text: "Otro comentario")
+resources :comments, only: [:create]
 ```
+
+Por último vamos a modificar las vistas para integrar los comentarios. Crea un archivo llamado `_comments.html.erb` en la carpeta `app/views/books/` con el siguiente contenido:
+
+```erb
+<div class="card comments mt-5 mb-5">
+  <div class="card-header border-bottom-0 font-weight-bold bg-transparent">Comentarios</div>
+  <ul class="list-group list-group-flush">
+    <% @book.comments.each do |comment| %>
+      <li class="list-group-item">
+        <header class="comment-header"><strong><%= comment.user.email %></strong> wrote <%= distance_of_time_in_words(Time.current, comment.created_at) %> ago</header>
+        <div class="comment-body"><%= comment.body %></div>
+      </li>
+    <% end %>
+
+    <% if @book.comments.empty? %>
+      <li class="list-group-item text-center">Aún no hay comentarios para este libro :(</li>
+    <% end %>
+  </ul>
+</div>
+
+<% if signed_in? %>
+  <div class="card bg-light new-comment">
+    <div class="card-body">
+      <p class="font-weight-bold">Deja tu comentario:</p>
+      <%= form_for @book.comments.build do |f| %>
+        <%= f.hidden_field :book_id, value: @book.id %>
+        <div class="form-group">
+          <%= f.text_area :body, rows: 4, class: "form-control" %>
+        </div>
+
+        <div class="text-right">
+          <%= f.submit "Comentar", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <div class="card bg-light mt-5">
+    <div class="card-body">
+      <p class="card-text text-center lead"><%= link_to "Regístrate", new_user_registration_path %> o <%= link_to "Ingresa", new_user_session_path %> para comentar</p>
+    </div>
+  </div>
+<% end %>
+```
+
+Ahora abre `app/views/books/show.html.erb` y referencia el **partial** que acabamos de crear exactamente debajo del siguiente código:
+
+```erb
+<div class="text-right">
+  <% if signed_in? %>
+    <%= link_to "Editar", edit_book_path(@book), class: "btn btn-link" %>
+    <%= link_to "Eliminar", @book, class: "btn btn-link text-danger", method: :delete, data: { confirm: "¿Estás seguro de eliminar este libro?" } %>
+  <% end %>
+</div>
+```
+
+La linea que debes agregar es:
+
+```erb
+<%= render "comments" >
+```
+
+Lo último que nos falta es agregar algunos estilos en `app/assets/stylesheets/books.scss`, debajo de la siguiente línea:
+
+```scss
+.book-details { padding: 0 20px 0 40px; }
+```
+
+Los estilos que vas a agregar son los siguientes:
+
+```scss
+.comments {
+  .comment-header {
+    color: #999;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+  }
+
+  .comment-body { font-size: 0.95rem; }
+}
+```
+
+Prúebalo y vuélvelo a desplegar a Heroku. Asegúrate de estudiar muy bien este código y entender qué está pasando.

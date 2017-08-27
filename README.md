@@ -12,7 +12,7 @@ Este libro está dirigido a personas que tienen conocimientos básicos de [Ruby]
 
 Para sacar el máximo provecho de este libro también es importante que tengas conocimientos básicos en HTML, CSS, Git y Github.
 
-En vez de ser una referencia completa del framework, el propósito de este libro es que adquieras los conocimientos básicos para que empieces a crear tus primeras aplicaciones Web y continues tu aprendizaje.
+En vez de ser una referencia completa del framework, el propósito de este libro es que adquieras los conocimientos necesarios para que empieces a crear tus primeras aplicaciones Web y continues tu aprendizaje.
 
 ---
 

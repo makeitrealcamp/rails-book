@@ -6,12 +6,20 @@ Existen varios lugares en donde uno puede realizar validaciones: en la base de d
 
 Aunque la validación en los modelos no anula la validación en la base de datos o en el cliente, los modelos ofrecen un sitio conveniente en dónde definir las validaciones.
 
+Si quieres clonar nuevamente el proyecto y ubicarte la rama de este capítulo ejecuta los siguientes comandos:
+
+```
+$ git clone https://github.com/makeitrealcamp/books-app.git
+$ cd books-app
+$ git checkout step-10
+``` 
+
 ## Creando nuestra primera validación
 
-Las validaciones se definen dentro de los modelos utilizando generalmente el método `validate`:
+Las validaciones se definen dentro de los modelos utilizando generalmente el método `validates`:
 
 ```ruby
-class Article < ApplicationRecord
+class Book < ApplicationRecord
   validates :title, presence: true
 end
 ```
@@ -42,7 +50,32 @@ else
 end
 ```
 
-Más adelante vamos a ver cómo trabajar con los errores de las validaciones.
+## Mostrando los errores en el formulario
+
+Existen varias formas de mostrar los errores del modelo en un formulario. La más fácil es mostrar todos los errores antes de los campos. Abre el archivo `app/views/books/_form.html.erb` y transcribe el siguiente código después del `div` con clase `card-body`:
+
+```erb
+<% if @book.errors.any? %>
+  <div id="card border-0">
+    <p>This form contains <%= pluralize(@book.errors.count, "error") %>:</p>
+    <ul>
+    <% @book.errors.full_messages.each do |msg| %>
+      <li class="text-danger"><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+```
+
+Cuando un campo tiene un error, Rails lo envuelve en un `div` con clase `field_with_errors`, así que abre `app/assets/stylesheets/application.scss` y agrega lo siguiente al final del archivo:
+
+```scss
+.field_with_errors .form-control {
+  border: 1px solid $red;
+}
+```
+
+Los errores aparecerán en Inglés. Más adelante aprenderemos cómo traducirlos.
 
 ## Validaciones incluídas
 
@@ -83,8 +116,8 @@ Para verificar que uno o más atributos contienen sólo valores numéricos utili
 
 ```ruby
 class Player < ApplicationRecord
-  validates :points, numericality: true
-  validates :games_played, numericality: { only_integer: true }
+  validates :num_pages, numericality: true
+  validates :num_pages, numericality: { only_integer: true }
 end
 ```
 

@@ -52,7 +52,7 @@ Los **scopes** pueden recibir argumentos.
 Por ejemplo:
 
 ```ruby
-class Article < ApplicationRecord
+class Book < ApplicationRecord
   scope :created_before, -> (time) { where("created_at < ?", time) }
 end
 ```
@@ -60,13 +60,13 @@ end
 Un **scope** con argumentos se invoca como si fuera un método de clase:
 
 ```ruby
-Article.created_before(Time.zone.now)
+Book.created_before(Time.zone.now)
 ```
 
 Recuerda que el **scope** se puede escribir también como un método de clase:
 
 ```ruby
-class Article < ApplicationRecord
+class Book < ApplicationRecord
   def self.created_before(time)
     where("created_at < ?", time)
   end

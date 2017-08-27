@@ -18,13 +18,31 @@ Por ejemplo, las rutas para hacer el CRUD de un **modelo** `Book` serían las si
 
 ## Definiendo las rutas de un recurso
 
-Para definir las rutas de un recurso en `config/routes.rb` se utiliza la palabra `resources`:
+Vamos a continuar trabajando en nuestra aplicación de libros. Puedes continuar con la aplicación que has venido construyendo o clonar el proyecto y descargar la rama `rest`:
+
+```
+$ git clone https://github.com/makeitrealcamp/books-app.git
+$ cd books-app
+$ git checkout step-4
+```
+
+Para definir las rutas de un recurso en `config/routes.rb` puedes definirlas una a una o utilizar la palabra clave `resources` seguido del nombre del recurso:
 
 ```ruby
 resources :books
 ```
 
-La línea anterior es equivalente a las siguientes 8 rutas:
+Asegúrate de que el archivo `config/routes.rb` quede de la siguiente forma:
+
+```ruby
+Rails.application.routes.draw do
+  root 'books#index'
+
+  resources :books
+end
+```
+
+La línea `resources :books` es equivalente a las siguientes 8 líneas:
 
 ```ruby
 get "/books", to: "books#index"
@@ -37,16 +55,32 @@ patch "/books/:id", to: "books#update"
 delete "/books/:id", to: "books#destroy"
 ```
 
-Para actualizar un recurso podemos utilizar el verbo `PUT` o `PATCH`.
+Puedes comprobarlo ejecutando el comando `rails routes` en la consola:
+
+```
+$ rails routes
+   Prefix Verb   URI Pattern               Controller#Action
+     root GET    /                         books#index
+    books GET    /books(.:format)          books#index
+          POST   /books(.:format)          books#create
+ new_book GET    /books/new(.:format)      books#new
+edit_book GET    /books/:id/edit(.:format) books#edit
+     book GET    /books/:id(.:format)      books#show
+          PATCH  /books/:id(.:format)      books#update
+          PUT    /books/:id(.:format)      books#update
+          DELETE /books/:id(.:format)      books#destroy
+```
+
+Fíjate que para actualizar un recurso podemos utilizar el verbo `PUT` o `PATCH`.
 
 ## Utilizando el generador de recursos
 
-Así como desde la consola podemos generar un modelo y un controlador, existe un generador que nos permite crear un recurso, que genera el modelo y el controlador al mismo tiempo.
+Así como desde la consola podemos generar un modelo y un controlador, existe un generador que nos permite generar el modelo y el controlador al mismo tiempo.
 
 Por ejemplo, en vez de haber creado el modelo `Book` y el controlador `BooksController` por separado, pudimos haber utilizado el siguiente comando:
 
 ```
-$ rails g resources book title description:text publication_date:date price:decimal num_pages:integer
+$ rails g resources book title author description:text image_url publication_date:date price:decimal
 ```
 
 Ese comando genera, entre otros, lo siguiente:
@@ -58,7 +92,7 @@ Ese comando genera, entre otros, lo siguiente:
 * El archivo `books.coffee` en `app/assets/javascripts/`.
 * La línea `resources :books` en `config/routes.rb`.
 
-No olvides correr la migración:
+Al final debes correr la migración:
 
 ```
 $ rails db:migrate
@@ -76,11 +110,11 @@ El controlador de un recurso está compuesto de las siguientes acciones (método
 * `update` para actualizar un registro.
 * `destroy` para eliminar un registro.
 
-Veamos cómo se implementaría cada una de estas acciones para un modelo `Book`.
+Implementemos cada una de estas acciones para el modelo `Book`.
 
 ### Listando registros
 
-El método `index` en el controlador `BooksController` quedaría de la siguiente forma:
+El método `index` se utiliza para listar los registros. Quedaría de la siguiente forma:
 
 ```ruby
 def index
@@ -92,10 +126,11 @@ Y la vista en `app/views/books/index.html.erb`:
 
 ```erb
 <h1>Libros</h1>
-<table>
+<%= link_to "Nuevo Libro", new_book_path %>
+<table border="1">
   <thead>
     <tr>
-      <th>Nombre</th>
+      <th>Título</th>
       <th>Descripción</th>
       <th>Fecha de Publicación</th>
       <th></th>
@@ -104,7 +139,7 @@ Y la vista en `app/views/books/index.html.erb`:
   <tbody>
     <% @books.each do |book| %>
       <tr>
-        <td><%= book.name %></td>
+        <td><%= book.title %></td>
         <td><%= book.description %></td>
         <td><%= book.publication_date %></td>
         <td>
@@ -118,9 +153,11 @@ Y la vista en `app/views/books/index.html.erb`:
 </table>
 ```
 
+Si ingresas a http://localhost:3000/ o http://localhost:3000/books/ vas a ver una tabla vacía o con los libros que creaste en el capítulo anterior.
+
 ### Mostrando los detalles de un registro
 
-El método `show` quedaría de la siguiente forma:
+El método `show` se utiliza para mostrar los detalles de un registro. Quedaría de la siguiente forma:
 
 ```ruby
 def show
@@ -132,11 +169,11 @@ Y la vista en `app/views/books/show.html.erb` quedaría de la siguiente forma:
 
 ```erb
 <h1>Detalles del Libro</h1>
-<div>Nombre: <%= @book.name %></div>
+<div>Nombre: <%= @book.title %></div>
+<div>Autor: <%= @book.author %></div>
 <div>Descripción: <%= @book.description %></div>
 <div>Fecha de publicación: <%= @book.publication_date %></div>
 <div>Precio: <%= @book.price %></div>
-<div>Número de páginas: <%= @book.num_pages %></div>
 ```
 
 ### Mostrando el formulario de creación
@@ -154,26 +191,31 @@ end
 Y la vista en `app/views/books/new.html.erb` sería la siguiente:
 
 ```erb
+<h1>Nuevo Libro</h1>
 <%= form_for @book do |f| %>
   <div>
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
+    <%= f.label :title %>
+    <%= f.text_field :title %>
   </div>
   <div>
-    <%= f.label :description %><br>
+    <%= f.label :author %>
+    <%= f.text_field :author %>
+  </div>
+  <div>
+    <%= f.label :description %>
     <%= f.text_area :description %>
   </div>
   <div>
-    <%= f.label :publication_date %><br>
+    <%= f.label :image_url %>
+    <%= f.text_field :image_url %>
+  </div>
+  <div>
+    <%= f.label :publication_date %>
     <%= f.date_field :publication_date %>
   </div>
   <div>
-    <%= f.label :price %><br>
-    <%= f.date_field :price %>
-  </div>
-  <div>
-    <%= f.label :num_pages %><br>
-    <%= f.date_field :num_pages %>
+    <%= f.label :price %>
+    <%= f.number_field :price, step: :any %>
   </div>
 
   <div>
@@ -190,7 +232,7 @@ Para crear el registro necesitamos implementar el método `create` y un método 
 def create
   @book = Book.new(book_params)
   if @book.save
-    redirect_to book_path
+    redirect_to @book
   else
     render :new
   end
@@ -198,7 +240,7 @@ end
 
 private
   def book_params
-    params.require(:book).permit(:name, :description, :price)
+    params.require(:book).permit(:title, :author, :description, :image_url, :publication_date, :price)
   end
 ```
 
@@ -219,26 +261,31 @@ end
 Y la vista en `app/views/books/edit.html.erb` sería la siguiente:
 
 ```erb
+<h1>Editar Libro</h1>
 <%= form_for @book do |f| %>
   <div>
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
+    <%= f.label :title %>
+    <%= f.text_field :title %>
   </div>
   <div>
-    <%= f.label :description %><br>
+    <%= f.label :author %>
+    <%= f.text_field :author %>
+  </div>
+  <div>
+    <%= f.label :description %>
     <%= f.text_area :description %>
   </div>
-   <div>
-    <%= f.label :price %><br>
-    <%= f.number_field :price %>
+  <div>
+    <%= f.label :image_url %>
+    <%= f.text_field :image_url %>
   </div>
   <div>
-    <%= f.label :price %><br>
-    <%= f.date_field :price %>
+    <%= f.label :publication_date %>
+    <%= f.date_field :publication_date %>
   </div>
   <div>
-    <%= f.label :num_pages %><br>
-    <%= f.date_field :num_pages %>
+    <%= f.label :price %>
+    <%= f.number_field :price, step: :any %>
   </div>
 
   <div>
@@ -247,7 +294,7 @@ Y la vista en `app/views/books/edit.html.erb` sería la siguiente:
 <% end %>
 ```
 
-El formulario de edición es igual al de creación, así que una buena práctica es moverlo a un partial `_form.html.erb`.
+Fíjate que el formulario de edición es igual al de creación, más adelante veremos cómo podemos reutilizar el código para no tener que duplicarlo en los dos archivos, pero por ahora déjalo así.
 
 ### Actualizando un registro
 
@@ -257,7 +304,7 @@ Para actualizar el registro necesitamos implementar el método `update` y el mé
 def update
   @book = Book.find(params[:id])
   if @book.update(book_params)
-    redirect_to books_path
+    redirect_to @book
   else
     render :edit
   end

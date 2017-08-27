@@ -6,7 +6,7 @@ Una migración es un archivo que se crea dentro de la carpeta `db/migrate` y que
 
 Cuando creas un **modelo** desde la línea de comandos con el generador de Rails, automáticamente se crea una **migración** con las instrucciones para crear la tabla.
 
-Sin embargo, también puedes crear migraciones para agregar, remover o cambiar columnas de una tabla generalmente.
+Sin embargo, también puedes crear migraciones para agregar, remover o cambiar columnas de una tabla, entre otros.
 
 ## Creando una migración
 
@@ -16,16 +16,24 @@ La forma más fácil de crear una migración es desde la línea de comandos:
 $ rails generate migration <nombre_de_la_migración>
 ```
 
-Por ejemplo, para crear una migración vacía y agregar un campo `publisher` a la tabla `books` podemos ejecutar el siguiente comando:
+Continuemos con nuestro proyecto. Si seguiste los pasos puedes continuar con esa misma aplicación. De lo contrario, puedes clonar el proyecto e iniciar en la rama de este capítulo ejecutando los siguientes comandos:
 
 ```
-$ rails generate migration AddPublisherToBooks
+$ git clone https://github.com/makeitrealcamp/books-app.git
+$ cd books-app
+$ git checkout step-3
+```
+
+Vamos a crear una migración para agregar un campo `image_url` que va a contener la URL a la imagen de la cubierta del libro:
+
+```
+$ rails generate migration AddImageUrlToBooks
 ```
 
 El archivo que se generaría en `db/migrate` tendría lo siguiente:
 
 ```ruby
-class AddPublisherToBooks < ActiveRecord::Migration[5.0]
+class AddImageUrlToBooks < ActiveRecord::Migration[5.0]
   def change
   end
 end
@@ -34,39 +42,43 @@ end
 Para agregar el campo debemos agregar la siguiente línea al método `change`:
 
 ```ruby
-add_column :books, :publisher, :string
+add_column :books, :image_url, :string
 ```
 
-Si la migración es de la forma "AddXXXToYYY" seguido de una lista de columnas y su tipo, la migración va a tener las instrucciones para agregar automáticamente ese o esos campos.
-
-Por ejemplo, la migración anterior la hubiesemos podido crear más fácil de la siguiente forma:
+Por último no olvides correr la migración ejecutando:
 
 ```
-$ rails generate migration AddPublisherToBooks publisher
+$ rails db:migrate
+```
+
+Si la migración es de la forma "AddXXXToYYY" seguido de una lista de columnas y su tipo, la migración va a tener las instrucciones para agregar automáticamente ese o esos campos. Por ejemplo, la migración anterior la hubiesemos podido crear más fácil de la siguiente forma:
+
+```
+$ rails generate migration AddImageUrlToBooks image_url
 ```
 
 Y eso va a generar la siguiente migración:
 
 ```ruby
-class AddPublisherToBooks < ActiveRecord::Migration[5.0]
+class AddImageUrlToBooks < ActiveRecord::Migration[5.0]
   def change
-    add_column :books, :publisher, :string
+    add_column :books, :image_url, :string
   end
 end
 ```
 
-De forma similar podemos generar una migración para remover una columna si la migración es de la forma "RemoveXXXFromYYY":
+De forma similar podemos generar una migración para remover una columna si la migración es de la forma "RemoveXXXFromYYY" (no lo hagas en el proyecto):
 
 ```
-$ rails generate migration RemovePublisherFromBooks publisher
+$ rails generate migration RemoveImageUrlFromBooks image_url
 ```
 
 Al ejecutar el comando generaría la siguiente migración:
 
 ```ruby
-class RemovePublisherFromBooks < ActiveRecord::Migration[5.0]
+class RemoveImageUrlFromBooks < ActiveRecord::Migration[5.0]
   def change
-    remove_column :books, :publisher, :string
+    remove_column :books, :image_url, :string
   end
 end
 ```

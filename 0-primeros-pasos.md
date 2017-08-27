@@ -2,7 +2,7 @@
 
 En este capítulo vamos a crear nuestra primera aplicación de [Ruby on Rails](http://rubyonrails.org/), la misma aplicación con la que trabajaremos durante todo el libro.
 
-La aplicación que vamos a construir se va a llamar **Books** y les va a permitir a los usuarios registrarse, publicar libros y dejar reseñas. El resultado final lo puedes ver en [este enlace]().
+La aplicación que vamos a construir se va a llamar **Books** y les va a permitir a los usuarios registrarse, publicar libros y dejar reseñas. El resultado final lo puedes ver en [este enlace](https://secret-mountain-43088.herokuapp.com/).
 
 ## Requisitos
 
@@ -50,7 +50,17 @@ Ingresa a la carpeta ejecutando:
 $ cd books
 ```
 
-Inicia el servidor ejecutando `rails server` o `rails s` :
+Abre la carpeta con tu editor preferido. Por ejemplo, si estás utilizando Atom como editor de texto ejecuta:
+
+```
+$ atom .
+```
+
+Deberías ver una serie de carpetas y archivos que **Rails** generó automáticamente cuando ejecutamos el comando `rails new books`.
+
+![Books - Atom Editor](https://s3.amazonaws.com/makeitreal/images/books/atom-books.jpg)
+
+Inicia el servidor ejecutando `rails server` o `rails s`:
 
 ```
 $ rails server
@@ -58,9 +68,11 @@ $ rails server
 
 Ingresa en tu navegador a http://localhost:3000/. Deberías ver la pantalla inicial de Ruby on Rails!
 
+![Rails - Inicio](https://s3.amazonaws.com/makeitreal/images/books/rails-welcome.jpg)
+
 ### Nuestra primera ruta
 
-El objetivo principal de **Ruby on Rails** es el de asociar **rutas** (p.e. `/books`, `/users`, etc.) a **métodos de Ruby** que se van a llamar cada vez que una petición HTTP coincida con alguna de las rutas.
+El objetivo principal de **Ruby on Rails** es el de asociar **rutas** (p.e. `/books`, `/users`, etc.) a **métodos de Ruby** que se encarguen de responder las peticiones HTTP.
 
 Las asociación entre rutas y métodos se define en el archivo `config/routes.rb`.
 
@@ -68,7 +80,7 @@ A las clases que contienen los métodos asociados a rutas se les conoce como **c
 
 Los **controladores** se encuentra en la carpeta `app/controllers`.
 
-Vamos a generar nuestro primer controlador ejecutando el siguiente comando:
+Vamos a generar nuestro primer **controlador** ejecutando el siguiente comando:
 
 ```
 $ rails generate controller Pages
@@ -88,11 +100,11 @@ end
 
 Lo que estamos haciendo en este método es retornando el código HTML que queremos que aparezca en el navegador.
 
-A los métodos dentro de un **controlador** se le conocen como **acciones**.
+A los métodos dentro de un **controlador** se les conocen como **acciones**.
 
 ¿Se te ocurre alguna idea de por qué tenemos que agregarle `.html_safe` al final?
 
-Por último vamos a asociar el método `home` a la ruta `/home`. Abre el archivo `config/routes.rb` y asegúrate de que quede como se muestra a continuación:
+Por último, vamos a asociar el método `home` a la ruta `/home`. Abre el archivo `config/routes.rb` y asegúrate de que quede como se muestra a continuación:
 
 ```ruby
 Rails.application.routes.draw do
@@ -100,7 +112,7 @@ Rails.application.routes.draw do
 end
 ```
 
-Prende nuevamente el servidor e ingresa desde tu navegador a http://localhost:3000/home/. Te debería aparecer "Hola, Rails!".
+Ingresa desde tu navegador a http://localhost:3000/home/. Te debería aparecer "Hola, Rails!".
 
 ### Utilizando una vista
 
@@ -120,7 +132,7 @@ Para crear nuestra primera vista crea un carpeta llamada `pages` dentro de `app/
 
 Fíjate que el código Ruby se debe embeber en las etiquetas `<%` y `%>`.
 
-Ahora, para decirle a la **acción** `home` que renderice este archivo debes eliminar que empieza con `render` y dejar el método `home` vacío como se muestra a continuación:
+Ahora, para decirle a la **acción** `home` que renderice este archivo debes eliminar la línea que empieza con `render` y dejar el método `home` vacío como se muestra a continuación:
 
 ```ruby
 class PagesController < ApplicationController
@@ -131,7 +143,7 @@ end
 
 Por convención Rails va a buscar un archivo que se llame igual al método (ignorando la extensión) y que se encuentre dentro de una carpeta que se llame igual al controlador. Es por eso que creamos la carpeta `pages` y llamamos a la vista `home.html.erb`.
 
-Si refrescas la página deberías ver 3 veces la frase "Hola Mundo".
+Si refrescas la página deberías ver la frase "Hola Mundo" tres veces.
 
 ### Definiendo la página de inicio
 
@@ -147,6 +159,6 @@ Ahora ingresa a http://localhost:3000/. Debería aparecer "Hola Mundo" tres vece
 
 ## Si te sientes abrumado(a)
 
-Si te sientes abrumado(a) con tanta información no te preocupes, se pondrá peor. No es cierto, estoy bromeando. En los próximos capítulos vamos a reforzar todo lo que hemos visto hasta ahora y todo va a empezar a tener más sentido ... espero ;)
+Si te sientes abrumado(a) con tanta información no te preocupes, se pondrá peor ... no es cierto, estoy bromeando. En los próximos capítulos vamos a reforzar todo lo que hemos visto hasta ahora y todo va a empezar a tener más sentido ;)
 
 ¡Continuemos!

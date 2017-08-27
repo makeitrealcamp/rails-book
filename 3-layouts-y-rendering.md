@@ -2,7 +2,7 @@
 
 Por defecto todas las vistas utilizan el layout ubicado en `app/views/layouts/application.html.erb`. Los cambios que hagas en ese archivo van a afectar a todas las vistas.
 
-En general en ese archivo se ubica el menú principal de la aplicación, el pie de la página, etc.
+En general, dentro de ese archivo van elementos que aplican para toda las vistas de la aplicación como el menú principal, el pie de la página, etc.
 
 Dentro del archivo vas a encontrar la palabra `yield` que es la línea que se reemplaza por el contenido de cada vista.
 
@@ -125,10 +125,10 @@ Cada código tiene su símbolo correspondiente, puedes encontrar la lista comple
 
 ### 2. Utilizando `redirect_to` para redireccionar
 
-Para redireccionar a otra ruta de tu aplicación o a un sitio externo utiliza el método `redirect_to`. Por ejemplo, la siguiente línea redireccionaría al usuario a `/products`:
+Para redireccionar a otra ruta de tu aplicación o a un sitio externo utiliza el método `redirect_to`. Por ejemplo, la siguiente línea redireccionaría al usuario a `/authors`:
 
 ```ruby
-redirect_to products_path
+redirect_to authors_path
 ```
 
 Para redireccionar a un sitio externo simplemente utiliza la URL del sitio de la siguiente forma:

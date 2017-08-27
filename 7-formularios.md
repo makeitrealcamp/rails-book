@@ -22,7 +22,7 @@ Podemos utilizar `form_for` para crear un formulario asociado al modelo `@book` 
 
 Si `@book` es un nuevo registro se crea un formulario a la ruta `POST /books`.
 
-Si `@book` ya está persistido en la base de datos se crea un formulario a la ruta `PATCH /books/:id`.
+Si `@book` ya está almacenado en la base de datos se crea un formulario a la ruta `PATCH /books/:id`.
 
 Eso quiere decir que podemos reutilizar el mismo código tanto para crear como para actualizar los registros.
 
