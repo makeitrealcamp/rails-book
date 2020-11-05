@@ -146,7 +146,7 @@ Para generar los controladores utiliza el siguiente comando:
 ```
 $ rails generate devise:controllers users
 ```
-Luego incorpora el controlador que se quieras sobreescribir en routes de la siguiente manera:
+Luego incorpora el controlador que quieras sobreescribir en routes de la siguiente manera:
 ```ruby
 devise_for :users, :controllers => { registrations: 'users/registrations' }
 ```
