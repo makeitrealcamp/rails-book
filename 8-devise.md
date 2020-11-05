@@ -144,7 +144,11 @@ $ rails generate devise:views
 Para generar los controladores utiliza el siguiente comando:
 
 ```
-$ rails generate devise:views users
+$ rails generate devise:controllers users
+```
+Luego incorpora el controlador que se quieras sobreescribir en routes de la siguiente manera:
+```ruby
+devise_for :users, :controllers => { registrations: 'users/registrations' }
 ```
 
 De esta forma puedes modificar las vistas y cambiar funcionalidad de [Devise](https://github.com/plataformatec/devise).
